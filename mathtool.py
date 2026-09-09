@@ -1,14 +1,14 @@
 import sys
-import math
+import math  
 
 MAX_VALUE = 10000
 
 
 def main():
     if len(sys.argv) == 1 or sys.argv[1] == "--help":
-        show_help()
+        show_help() 
         return
-
+    
     if sys.argv[1] != "solve":
         print("Ошибка: неизвестная команда", file=sys.stderr)
         return
@@ -19,7 +19,7 @@ def main():
             b = int(input("Введите B: "))
             c = int(input("Введите C: "))
         except ValueError:
-            print("Ошибка: введите числа!", file=sys.stderr)
+            print("Ошибка: введите числа", file=sys.stderr)
             return
 
     elif len(sys.argv) == 7:
@@ -32,7 +32,7 @@ def main():
             b = int(sys.argv[5])
             c = int(sys.argv[7])
         except ValueError:
-            print("Ошибка: введите числа", file=sys.stderr)
+            print("Ошибка: введите числа!", file=sys.stderr)
             return
 
     else:
@@ -54,7 +54,7 @@ def main():
 
     else:
         print("Квадратное уравнение")
-        D = b ** 2 - 4 * a * c
+        D = b ** 2 - 4 * a * c 
         print(f"D = {D}")
 
         if D > 0:
@@ -70,9 +70,9 @@ def main():
         else:
             print("Корней нет")
 
-    def show_help():
-        print("Программа решает уравнения вида A*x^2 + B*x + C = 0")
 
+def show_help():
+    print("Программа решает уравнения вида A*x^2 + B*x + C = 0")
     print("Как использовать:")
     print("python mathtool.py        # показать справку")
     print("python mathtool.py --help # показать справку")
