@@ -30,7 +30,7 @@ def main():
             print("Ошибка: введите числа", file=sys.stderr)
             return
             
-    elif len(sys.argv) == 7:
+    elif len(sys.argv) == 8:
         if sys.argv[2] != "-a" or sys.argv[4] != "-b" or sys.argv[6] != "-c":
             print("Ошибка в параметрах", file=sys.stderr)
             return
