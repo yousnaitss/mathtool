@@ -15,51 +15,55 @@ def show_help():
 def main():
     if len(sys.argv) == 1 or sys.argv[1] == "--help":
         show_help()
-        return
+        sys.exit(0)  
+    
     
     if sys.argv[1] != "solve":
         print("Неправильная команда", file=sys.stderr)
-        return
+        sys.exit(1)  
     
+    a, b, c = None, None, None
+
     if len(sys.argv) == 2:
         try:
             a = int(input("Введите A: "))
             b = int(input("Введите B: "))
             c = int(input("Введите C: "))
-        except:
-            print("Ошибка: введите числа", file=sys.stderr)
-            return
+        except ValueError:  
+            print("Ошибка: введите целые числа", file=sys.stderr)
+            sys.exit(1)   
             
     elif len(sys.argv) == 8:
         if sys.argv[2] != "-a" or sys.argv[4] != "-b" or sys.argv[6] != "-c":
-            print("Ошибка в параметрах", file=sys.stderr)
-            return
-            
+            print("Ошибка в параметрах формата", file=sys.stderr)
+            sys.exit(1)  
         try:
             a = int(sys.argv[3])
             b = int(sys.argv[5])
             c = int(sys.argv[7])
-        except:
+        except ValueError:
             print("Ошибка: введите числа", file=sys.stderr)
-            return
+            sys.exit(1)  
             
     else:
         print("Неверный формат ввода", file=sys.stderr)
-        return
+        sys.exit(1)  
         
+    # проверка диапазона чисел
     if abs(a) > MAX_VALUE or abs(b) > MAX_VALUE or abs(c) > MAX_VALUE:
         print("Числа слишком большие", file=sys.stderr)
-        return
+        sys.exit(1)  
         
+    # решение уравнения
     if a == 0:
         if b == 0:
             print("Это не уравнение", file=sys.stderr)
-            return
+            sys.exit(1)
             
         print("Линейное уравнение")
         x = -c / b
         print(f"x = {x:.3f}")
-        
+        sys.exit(0)
     else:
         print("Квадратное уравнение")
         D = b**2 - 4*a*c
@@ -70,13 +74,13 @@ def main():
             x2 = (-b - math.sqrt(D)) / (2*a)
             print(f"x1 = {x1:.3f}")
             print(f"x2 = {x2:.3f}")
-            
         elif D == 0:
             x = -b / (2*a)
             print(f"x = {x:.3f}")
-            
         else:
             print("Действительных корней нет")
+        
+        sys.exit(0) 
 
 if __name__ == "__main__":
     main()
