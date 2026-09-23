@@ -1,7 +1,7 @@
 import sys
-import math
 
-MAX_VALUE = 10000
+from calc import equation
+from cli import create_parser
 
 def show_help():
     print("Программа решает уравнения вида A*x^2 + B*x + C = 0")
@@ -13,74 +13,57 @@ def show_help():
     print("Числа должны быть целыми и не больше 10000 по модулю")
 
 def main():
-    if len(sys.argv) == 1 or sys.argv[1] == "--help":
-        show_help()
-        sys.exit(0)  
-    
-    
-    if sys.argv[1] != "solve":
-        print("Неправильная команда", file=sys.stderr)
-        sys.exit(1)  
-    
-    a, b, c = None, None, None
+    parser = create_parser()
+    args = parser.parse_args()
 
-    if len(sys.argv) == 2:
+    if args.command is None:
+        parser.print_help()
+        return 0
+
+    if args.command == "solve":
+        a, b, c = args.a, args.b, args.c
+
+        if a is None and b is None and c is None:
+            try:
+                a = int(input("Введите A: "))
+                b = int(input("Введите B: "))
+                c = int(input("Введите C: "))
+            except ValueError:
+                print("Ошибка: введите целые числа", file=sys.stderr)
+                return 1
+
+        elif a is None or b is None or c is None:
+            print(
+                "Ошибка: необходимо указать либо все параметры -a, -b, -c, либо ни одного",
+                file=sys.stderr
+            )
+            return 1
+
         try:
-            a = int(input("Введите A: "))
-            b = int(input("Введите B: "))
-            c = int(input("Введите C: "))
-        except ValueError:  
-            print("Ошибка: введите целые числа", file=sys.stderr)
-            sys.exit(1)   
-            
-    elif len(sys.argv) == 8:
-        if sys.argv[2] != "-a" or sys.argv[4] != "-b" or sys.argv[6] != "-c":
-            print("Ошибка в параметрах формата", file=sys.stderr)
-            sys.exit(1)  
-        try:
-            a = int(sys.argv[3])
-            b = int(sys.argv[5])
-            c = int(sys.argv[7])
-        except ValueError:
-            print("Ошибка: введите числа", file=sys.stderr)
-            sys.exit(1)  
-            
-    else:
-        print("Неверный формат ввода", file=sys.stderr)
-        sys.exit(1)  
-        
-    # проверка диапазона чисел
-    if abs(a) > MAX_VALUE or abs(b) > MAX_VALUE or abs(c) > MAX_VALUE:
-        print("Числа слишком большие", file=sys.stderr)
-        sys.exit(1)  
-        
-    # решение уравнения
-    if a == 0:
-        if b == 0:
-            print("Это не уравнение", file=sys.stderr)
-            sys.exit(1)
-            
-        print("Линейное уравнение")
-        x = -c / b
-        print(f"x = {x:.3f}")
-        sys.exit(0)
-    else:
-        print("Квадратное уравнение")
-        D = b**2 - 4*a*c
-        print(f"D = {D}")
-        
-        if D > 0:
-            x1 = (-b + math.sqrt(D)) / (2*a)
-            x2 = (-b - math.sqrt(D)) / (2*a)
-            print(f"x1 = {x1:.3f}")
-            print(f"x2 = {x2:.3f}")
-        elif D == 0:
-            x = -b / (2*a)
-            print(f"x = {x:.3f}")
+            kind, d, roots = equation.solve(a, b, c)
+        except ValueError as error:
+            print(f"Ошибка: {error}", file=sys.stderr)
+            return 1
+
+        if kind == "линейное":
+            print("Линейное уравнение")
+            print(f"x = {roots[0]:.3f}")
+
         else:
-            print("Действительных корней нет")
-        
-        sys.exit(0) 
+            print("Квадратное уравнение")
+            print(f"D = {d}")
+
+            if len(roots) == 2:
+                print(f"x1 = {roots[0]:.3f}")
+                print(f"x2 = {roots[1]:.3f}")
+            elif len(roots) == 1:
+                print(f"x = {roots[0]:.3f}")
+            else:
+                print("Действительных корней нет")
+
+        return 0
+
+    return 1
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
