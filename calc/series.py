@@ -30,11 +30,12 @@ FORMULAS = {
 
 
 def sum_by_terms(term, terms):
+    #проверка корректности количества слагаемых
     if terms < 1 or terms > MAX_TERMS:
         raise ValueError("количество слагаемых вне диапазона")
 
     result = 0
-
+    #суммирование слагаемых
     for n in range(1, terms + 1):
         result += term(n)
 
@@ -42,12 +43,13 @@ def sum_by_terms(term, terms):
 
 
 def sum_by_eps(term, eps):
+    #проверка точности
     if eps <= 0 or eps > MAX_EPS:
         raise ValueError("точность вне диапазона")
 
     result = 0
     n = 0
-
+    #суммирование слагаемых до достижения точности
     while n < MAX_ITERATIONS:
         n += 1
         value = term(n)
@@ -55,5 +57,5 @@ def sum_by_eps(term, eps):
 
         if abs(value) < eps:
             return result, n
-
+    #ограничение количества итераций
     raise ValueError("точность не достигнута")

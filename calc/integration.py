@@ -5,13 +5,15 @@ MAX_STEPS = 100000
 
 
 def f_ratio(x):
+    #первая подынтегральная функция
     return x / (x + 1)
 
 
 def f_root(x):
+    #вторая подынтегральная функция
     return math.sqrt(x * x + 1)
 
-
+#таблица доступных функций и их ограничений
 FUNCTIONS = {
     "ratio": (
         f_ratio,
@@ -31,6 +33,7 @@ FUNCTIONS = {
 
 
 def integrate(function, a, b, steps):
+    #проверка корректности пределов интегрирования и количества шагов
     if not math.isfinite(a) or not math.isfinite(b):
         raise ValueError("пределы должны быть конечными")
 
@@ -51,6 +54,7 @@ def integrate(function, a, b, steps):
 
 
 def validate_limits(a, b, low, high, closed):
+    #проверка корректности пределов интегрирования
     if closed:
         if a < low or a > high or b < low or b > high:
             raise ValueError("предел вне допустимого диапазона")

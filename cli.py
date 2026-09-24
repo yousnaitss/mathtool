@@ -19,6 +19,7 @@ def create_parser():
     solve_parser.add_argument("-b", type=int, help="коэффициент B")
     solve_parser.add_argument("-c", type=int, help="коэффициент C")
 
+    #параметры для команды stats
     stats_parser = subparsers.add_parser(
         "stats",
         help="показатели числовой последовательности",
@@ -29,6 +30,7 @@ def create_parser():
         help="файл с числами"
     )
 
+    #параметры для команды series
     series_parser = subparsers.add_parser(
         "series",
         help="сумма ряда",
@@ -41,6 +43,7 @@ def create_parser():
         help="рассчитываемый ряд"
     )
 
+    #выбор способа суммирования ряда
     series_group = series_parser.add_mutually_exclusive_group(required=True)
     series_group.add_argument(
         "--terms",
@@ -53,6 +56,7 @@ def create_parser():
         help="требуемая точность"
     )
 
+    #параметры для команды integrate
     integrate_parser = subparsers.add_parser(
         "integrate",
         help="интегрирование",

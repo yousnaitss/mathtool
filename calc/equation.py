@@ -4,6 +4,7 @@ MAX_VALUE = 10000
 
 
 def solve(a, b, c):
+    #проверка допустимости коэффициентов
     if abs(a) > MAX_VALUE or abs(b) > MAX_VALUE or abs(c) > MAX_VALUE:
         raise ValueError("Числа слишком большие")
 
@@ -13,7 +14,7 @@ def solve(a, b, c):
 
         x = -c / b
         return "линейное", None, [x]
-
+    #решение квадратного уравнения
     d = b ** 2 - 4 * a * c
 
     if d > 0:
