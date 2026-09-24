@@ -1,5 +1,7 @@
 import sys
-
+from calc import integration
+from calc import series
+from calc import stats
 from calc import equation
 from cli import create_parser
 
@@ -40,6 +42,92 @@ def handle_solve(args):
 
     return 0
 
+def handle_stats(args):
+    if args.input:
+        with open(args.input, encoding="utf-8-sig") as handle:
+            values = []
+
+            for line in handle:
+                for word in line.split():
+                    try:
+                        value = float(word)
+                    except ValueError:
+                        raise ValueError(f"{word} не является числом")
+
+                    values.append(value)
+    else:
+        values = []
+
+        for line in sys.stdin:
+            for word in line.split():
+                try:
+                    value = float(word)
+                except ValueError:
+                    raise ValueError(f"{word} не является числом")
+
+                values.append(value)
+
+    stats.validate_numbers(values)
+
+    print(f"Количество: {len(values)}")
+    print(f"Сумма: {stats.total(values):.3f}")
+    print(f"Ср. арифм.: {stats.mean(values):.3f}")
+    print(f"Сумма кв.: {stats.sum_squares(values):.3f}")
+    print(f"Ср. кв.: {stats.root_mean_square(values):.3f}")
+    print(f"Дисперсия: {stats.variance(values):.3f}")
+    print(f"СКО: {stats.rms_deviation(values):.3f}")
+
+    standard = stats.standard_deviation(values)
+
+    if standard is None:
+        print("Станд. откл.: НЕ СУЩЕСТВУЕТ")
+    else:
+        print(f"Станд. откл.: {standard:.3f}")
+
+    print(f"Наименьшее: {stats.minimum(values):.3f}")
+    print(f"Наибольшее: {stats.maximum(values):.3f}")
+    print(f"Положительных: {stats.positive_count(values)}")
+    print(f"Отрицательных: {stats.negative_count(values)}")
+
+    return 0
+
+def handle_series(args):
+    term, formula = series.FORMULAS[args.func]
+
+    if args.terms is not None:
+        result = series.sum_by_terms(term, args.terms)
+        terms = args.terms
+    else:
+        result, terms = series.sum_by_eps(term, args.eps)
+
+    print(formula)
+    print(f"Слагаемых: {terms}")
+    print(f"Сумма ряда: {result:.4f}")
+
+    return 0
+
+def handle_integrate(args):
+    function, formula, low, high, closed = integration.FUNCTIONS[args.func]
+
+    integration.validate_limits(
+        args.start,
+        args.end,
+        low,
+        high,
+        closed
+    )
+
+    result = integration.integrate(
+        function,
+        args.start,
+        args.end,
+        args.steps
+    )
+
+    print(formula)
+    print(f"Значение интеграла: {result:.4f}")
+
+    return 0
 
 def main():
     parser = create_parser()
@@ -52,6 +140,16 @@ def main():
     try:
         if args.command == "solve":
             return handle_solve(args)
+
+        if args.command == "stats":
+            return handle_stats(args)
+
+        if args.command == "series":
+            return handle_series(args)
+
+        if args.command == "integrate":
+            return handle_integrate(args)
+
 
         return 1
 
