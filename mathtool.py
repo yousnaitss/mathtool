@@ -7,8 +7,10 @@ from cli import create_parser
 
 
 def handle_solve(args):
+    #получение коэффициентов
     a, b, c = args.a, args.b, args.c
 
+    #ввод коэф при отсутствии параметров
     if a is None and b is None and c is None:
         try:
             a = int(input("Введите A: "))
@@ -16,14 +18,16 @@ def handle_solve(args):
             c = int(input("Введите C: "))
         except ValueError:
             raise ValueError("введите целые числа")
-
+    #проверка ввода всех коэффициентов
     elif a is None or b is None or c is None:
         raise ValueError(
             "необходимо указать либо все параметры -a, -b, -c, либо ни одного"
         )
 
+    #решение уравнения
     kind, d, roots = equation.solve(a, b, c)
-
+    
+    #вывод результата
     if kind == "линейное":
         print("Линейное уравнение")
         print(f"x = {roots[0]:.3f}")
@@ -43,10 +47,12 @@ def handle_solve(args):
     return 0
 
 def handle_stats(args):
+    #чтение числ последовательности
     if args.input:
         with open(args.input, encoding="utf-8-sig") as handle:
             values = []
 
+            #чтение данных из файла
             for line in handle:
                 for word in line.split():
                     try:
@@ -57,7 +63,7 @@ def handle_stats(args):
                     values.append(value)
     else:
         values = []
-
+        #чтение данных из обычного ввода
         for line in sys.stdin:
             for word in line.split():
                 try:
@@ -68,7 +74,7 @@ def handle_stats(args):
                 values.append(value)
 
     stats.validate_numbers(values)
-
+    #вывод статистических данных
     print(f"Количество: {len(values)}")
     print(f"Сумма: {stats.total(values):.3f}")
     print(f"Ср. арифм.: {stats.mean(values):.3f}")
@@ -94,12 +100,14 @@ def handle_stats(args):
 def handle_series(args):
     term, formula = series.FORMULAS[args.func]
 
+    #выбор способа суммирования
     if args.terms is not None:
         result = series.sum_by_terms(term, args.terms)
         terms = args.terms
     else:
         result, terms = series.sum_by_eps(term, args.eps)
 
+    #вывод результата суммирования
     print(formula)
     print(f"Слагаемых: {terms}")
     print(f"Сумма ряда: {result:.4f}")
@@ -109,6 +117,7 @@ def handle_series(args):
 def handle_integrate(args):
     function, formula, low, high, closed = integration.FUNCTIONS[args.func]
 
+    #проверка пределов интегрирования
     integration.validate_limits(
         args.start,
         args.end,
@@ -117,6 +126,7 @@ def handle_integrate(args):
         closed
     )
 
+    #вычисление интеграла
     result = integration.integrate(
         function,
         args.start,
@@ -124,6 +134,7 @@ def handle_integrate(args):
         args.steps
     )
 
+    #вывод результата
     print(formula)
     print(f"Значение интеграла: {result:.4f}")
 
@@ -133,6 +144,7 @@ def main():
     parser = create_parser()
     args = parser.parse_args()
 
+    #если команда не указана то вывод справки
     if args.command is None:
         parser.print_help()
         return 0
@@ -152,7 +164,7 @@ def main():
 
 
         return 1
-
+    #обработка ошибок входных данныъ
     except (ValueError, OSError) as error:
         print(f"Ошибка: {error}", file=sys.stderr)
         return 1
