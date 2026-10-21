@@ -60,7 +60,7 @@ python mathtool.py solve -a 1 -b 2 Ожидается: ошибка о непо�
 
 python mathtool.py stats --input numbers.txt Ожидается: корректный вывод всех статистических показателей Код: 0
 
-Get-Content numbers.txt | python mathtool.py stats Ожидается: тот же результат, что и при чтении numbers.txt Код: 0
+python mathtool.py stats Ожидается: тот же результат, что и при чтении numbers.txt Код: 0
 
 python mathtool.py stats Ввод: 4 1 5 Ожидается: корректный вывод статистических показателей Код: 0
 
@@ -130,12 +130,8 @@ python mathtool.py integrate --func ratio --from NaN --to 20 --steps 100 Ожи�
 
 python mathtool.py integrate --func ratio --from 0 --to inf --steps 100 Ожидается: ошибка о недопустимом пределе Код: 1
 
-Дополнительная проверка точности для ratio:
-
 python mathtool.py integrate --func ratio --from 0 --to 20 --steps 10 Ожидается: результат примерно 15.7335
 
 python mathtool.py integrate --func ratio --from 0 --to 20 --steps 1000 Ожидается: результат примерно 16.9459
 
 python mathtool.py integrate --func ratio --from 0 --to 20 --steps 10000 Ожидается: результат примерно 16.9545
-
-При увеличении количества шагов в 10 раз погрешность должна уменьшаться примерно в 10 раз.

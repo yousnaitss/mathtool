@@ -4,6 +4,78 @@ from calc import series
 from calc import stats
 from calc import equation
 from cli import create_parser
+from calc.arrays import MIN_VALUE, MAX_VALUE, MAX_COUNT
+
+
+
+def read_array(path=None):
+    #чтение из файла или со ввода
+    if path:
+        with open(path, encoding="utf-8-sig") as file:
+            text = file.read()
+    else:
+        print(
+            "введите числа через пробел или запятую. пустая строка завершает ввод:",
+            file=sys.stderr
+        )
+        lines = []
+        while True:
+            try:
+                line = input()
+            except EOFError:
+                break
+
+            if not line.strip():
+                break
+
+            lines.append(line)
+
+        text = " ".join(lines)
+
+    #запятые и пробелы используются как разделители
+    words = text.replace(",", " ").split()
+
+    if not words:
+        raise ValueError("массив пуст")
+
+    #преобразование элементов в целые числа
+    values = []
+    for word in words:
+        try:
+            value = int(word)
+        except ValueError:
+            raise ValueError(f"{word} не является целым числом")
+
+        values.append(value)
+
+    #проверка количества элементов
+    if len(values) > MAX_COUNT:
+        raise ValueError(f"количество элементов превышает {MAX_COUNT}")
+
+    #проверка допустимого диапазона значений
+    for value in values:
+        if not MIN_VALUE <= value <= MAX_VALUE:
+            raise ValueError(
+                f"число {value} вне диапазона {MIN_VALUE}..{MAX_VALUE}"
+            )
+
+    return values
+
+#dsdjlbn vfccbd yf 'rhfy bkb pfgbcsdftn tuj d afqk
+def write_array(values, path=None):
+    #подготовка одной строки с числами через пробел
+    text = " ".join(str(value) for value in values) + "\n"
+
+    if path:
+        with open(path, "w", encoding="utf-8") as file:
+            file.write(text)
+        print(
+            f"Записано элементов: {len(values)} в файл {path}",
+            file=sys.stderr
+        )
+    else:
+        print(text, end="")
+
 
 
 def handle_solve(args):
