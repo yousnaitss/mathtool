@@ -1,4 +1,5 @@
 import argparse
+from calc.sorting import METHODS
 
 
 def create_parser():
@@ -124,6 +125,51 @@ def create_parser():
         "-o", "--output",
         help="файл для сохранения массива"
     )
+
+    #параметры для команды sort
+    sort_parser = subparsers.add_parser(
+        "sort",
+        help="сортировка массива",
+        allow_abbrev=False
+    )
+    sort_parser.add_argument(
+        "-m", "--method",
+        choices=METHODS.keys(),
+        required=True,
+        help="алгоритм сортировки"
+    )
+    sort_parser.add_argument(
+        "--order",
+        choices=["asc", "desc"],
+        default="asc",
+        help="порядок сортировки"
+    )
+    sort_parser.add_argument(
+        "-i", "--input",
+        help="файл с исходным массивом"
+    )
+    sort_parser.add_argument(
+        "-o", "--output",
+        help="файл для сохранения результата"
+    )
+
+    
+    #параметры для команды search
+    search_parser = subparsers.add_parser(
+        "search",
+        help="поиск элемента в массиве",
+        allow_abbrev=False
+    )
+    search_parser.add_argument(
+        "-v", "--value",
+        type=int,
+        help="искомое значение"
+    )
+    search_parser.add_argument(
+        "-i", "--input",
+        help="файл с массивом"
+    )
+
 
 
     return parser

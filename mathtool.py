@@ -1,4 +1,5 @@
 import sys
+import time
 from calc import integration
 from calc import series
 from calc import stats
@@ -6,8 +7,22 @@ from calc import equation
 from cli import create_parser
 from calc.arrays import MIN_VALUE, MAX_VALUE, MAX_COUNT
 from calc.arrays import fill_array
+from calc.sorting import METHODS
+from calc.arrays import binary_search
 
 
+def measure(name, operation, parameters):
+    #Измеряет время выполнения операции и возвращает её результат
+    start_time = time.perf_counter()
+    result = operation(*parameters)
+    elapsed = time.perf_counter() - start_time
+
+    print(
+        f"Время операции {name}: {elapsed:.6f} с",
+        file=sys.stderr
+    )
+
+    return result
 
 def read_array(path=None):
     #чтение из файла или со ввода
@@ -228,6 +243,51 @@ def handle_fill(args):
 
     return 0
 
+#обрабатывает команду сортировки массива
+def handle_sort(args):
+    #читает исходный массив
+    values = read_array(args.input)
+
+    #выбираем алгоритм и порядок сортировки
+    sort_function = METHODS[args.method]
+    descending = args.order == "desc"
+
+    #замер времени выполнения сортировки
+    measure(
+        f"sort ({args.method})",
+        sort_function,
+        (values, descending)
+    )
+
+    #выводим результат или записываем его в файл
+    write_array(values, args.output)
+
+    print("Массив отсортирован.")
+    return 0
+
+
+def handle_search(args):
+    #получаем искомое значение
+    if args.value is None:
+        try:
+            value = int(input("Введите искомое значение: "))
+        except ValueError:
+            raise ValueError("введите целое число")
+    else:
+        value = args.value
+
+    #читаем массив и ищем элемент
+    values = read_array(args.input)
+    index = binary_search(values, value)
+
+    if index is None:
+        print(f"Значение {value} не найдено.", file=sys.stderr)
+        return 1
+
+    #показываем номер элемента с единицы
+    print(f"Значение {value} имеет элемент с индексом {index + 1}.")
+    return 0
+
 
 def main():
     parser = create_parser()
@@ -254,6 +314,11 @@ def main():
         if args.command == "fill":
             return handle_fill(args)
 
+        if args.command == "sort":
+            return handle_sort(args)
+        
+        if args.command == "search":
+            return handle_search(args)
 
         return 1
     #обработка ошибок входных данныъ
