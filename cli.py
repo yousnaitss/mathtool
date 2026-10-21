@@ -88,5 +88,42 @@ def create_parser():
         required=True,
         help="количество шагов"
     )
+    
+    #параметры для команды fill
+    fill_parser = subparsers.add_parser(
+        "fill",
+        help="генерация массива случайных чисел",
+        allow_abbrev=False
+    )
+    fill_parser.add_argument(
+        "-c", "--count",
+        type=int,
+        required=True,
+        help="количество элементов"
+    )
+    fill_parser.add_argument(
+        "--min",
+        dest="min_value",
+        type=int,
+        default=-100,
+        help="минимальное значение"
+    )
+    fill_parser.add_argument(
+        "--max",
+        dest="max_value",
+        type=int,
+        default=100,
+        help="максимальное значение"
+    )
+    fill_parser.add_argument(
+        "--seed",
+        type=int,
+        help="начальное значение генератора случайных чисел"
+    )
+    fill_parser.add_argument(
+        "-o", "--output",
+        help="файл для сохранения массива"
+    )
+
 
     return parser

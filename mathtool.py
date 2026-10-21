@@ -5,6 +5,7 @@ from calc import stats
 from calc import equation
 from cli import create_parser
 from calc.arrays import MIN_VALUE, MAX_VALUE, MAX_COUNT
+from calc.arrays import fill_array
 
 
 
@@ -212,6 +213,22 @@ def handle_integrate(args):
 
     return 0
 
+#обрабатывает команду генерации массива
+def handle_fill(args):
+    #создание массива с заданными параметрами
+    values = fill_array(
+        args.count,
+        args.min_value,
+        args.max_value,
+        args.seed
+    )
+
+    #вывод массива или запись в файл
+    write_array(values, args.output)
+
+    return 0
+
+
 def main():
     parser = create_parser()
     args = parser.parse_args()
@@ -233,6 +250,9 @@ def main():
 
         if args.command == "integrate":
             return handle_integrate(args)
+
+        if args.command == "fill":
+            return handle_fill(args)
 
 
         return 1
