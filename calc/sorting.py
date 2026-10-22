@@ -72,7 +72,7 @@ def insertion_sort(values, descending=False):
 METHODS["insertion"] = insertion_sort
 
 def counting_sort(values, descending=False):
-    #сортирует массив подсчётом количества значений."""
+    #сортирует массив подсчётом количества значений
     counts = [0] * (MAX_VALUE - MIN_VALUE + 1)
 
     #подсчитываем количество каждого значения
