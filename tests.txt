@@ -140,20 +140,62 @@ python mathtool.py integrate --func ratio --from 0 --to 20 --steps 10000 Ожи�
 python mathtool.py fill -c 5 --seed 42                                             ожидается 63 -72 -94 89 -30
 python mathtool.py fill -c 0                                                       ОШИБКА: количество элементов вне диапазона 1..1000000
 python mathtool.py sort -m bubble -i example.txt                                   -76 -5 24 43 81; Массив отсортирован.
-python mathtool.py sort -m selection -i example.txt -o example_sorted.txt          Записано элементов: 5 в файл example_sorted.txt; Массив отсортирован.
+python mathtool.py sort -m selection -i example.txt -o sorted.txt          Записано элементов: 5 в файл example_sorted.txt; Массив отсортирован.
 python mathtool.py sort -m insertion -i example.txt                                -76 -5 24 43 81; Массив отсортирован.
 python mathtool.py sort -m counting -i example.txt --order desc                    81 43 24 -5 -76; Массив отсортирован.
-python mathtool.py search -v 43 -i example_sorted.txt                              Значение 43 имеет элемент с индексом 4.
-python mathtool.py search -v 15 -i example_sorted.txt                              Значение 15 не найдено.
+python mathtool.py search -v 43 -i sorted.txt                              Значение 43 имеет элемент с индексом 4.
+python mathtool.py search -v 15 -i sorted.txt                              Значение 15 не найдено.
 python mathtool.py search -v 43 -i example.txt                                     ОШИБКА: массив не упорядочен по возрастанию
 
-
+сортировка
 python mathtool.py sort -m bubble -i example.txt
 python mathtool.py sort -m selection -i example.txt
 python mathtool.py sort -m insertion -i example.txt
 python mathtool.py sort -m counting -i example.txt
 
+поиск
+Найти существующее число в отсортированном массиве
+python mathtool.py search -v 43 -i sorted.txt
 
+Найти число, которого нет в массиве
+python mathtool.py search -v 15 -i sorted.txt
+
+Проверить ошибку: поиск в неотсортированном массиве
+python mathtool.py search -v 43 -i example.txt
+
+Проверить поиск без указания числа — программа должна запросить его
+python mathtool.py search -i sorted.txt
+
+
+Пузырьковая сортировка по возрастанию
+python mathtool.py sort -m bubble -i example.txt
+
+Сортировка выбором по возрастанию
+python mathtool.py sort -m selection -i example.txt
+
+Сортировка вставками по возрастанию
+python mathtool.py sort -m insertion -i example.txt
+
+Сортировка подсчётом по возрастанию
+python mathtool.py sort -m counting -i example.txt
+
+cортировка по убыванию
+python mathtool.py sort -m bubble -i example.txt --order desc
+
+Сортировка с сохранением результата в файл
+python mathtool.py sort -m selection -i example.txt -o example_sorted.txt
+
+Сортировка данных, введённых вручную
+python mathtool.py sort -m insertion
+
+Сгенерировать 5 чисел с фиксированным seed
+python mathtool.py fill -c 5 --seed 42
+
+Записать сгенерированный массив в файл
+python mathtool.py fill -c 10 --seed 1 -o generated.txt
+
+
+сравнение времени сортировки
 python mathtool.py fill -c 1000 --seed 1 -o example.txt
 Время операции sort (bubble): 0.095829 с
 Время операции sort (selection): 0.061328 с

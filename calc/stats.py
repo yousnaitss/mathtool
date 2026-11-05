@@ -9,6 +9,15 @@ def validate_numbers(values):
     #проверка количества и допустимых значений
     if not values:
         raise ValueError("последовательность пуста")
+    if len(values) > MAX_COUNT:
+        raise ValueError("количество чисел превышает 20")
+
+    for value in values:
+        if not math.isfinite(value):
+            raise ValueError("число должно быть конечным")
+        if abs(value) > MAX_ABS:
+            raise ValueError(f"число {int(value)} вне диапазона -10000..10000")
+        
 def total(values):
     #расчет суммы
     result = 0

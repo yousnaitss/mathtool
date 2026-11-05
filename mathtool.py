@@ -77,7 +77,7 @@ def read_array(path=None):
 
     return values
 
-#dsdjlbn vfccbd yf 'rhfy bkb pfgbcsdftn tuj d afqk
+#выводит массив на экран или записывает его в файл
 def write_array(values, path=None):
     #подготовка одной строки с числами через пробел
     text = " ".join(str(value) for value in values) + "\n"
@@ -152,7 +152,15 @@ def handle_stats(args):
     else:
         values = []
         #чтение данных из обычного ввода
-        for line in sys.stdin:
+        while True:
+            try:
+                line = input()
+            except EOFError:
+                break
+
+            if not line.strip():
+                break
+
             for word in line.split():
                 try:
                     value = float(word)
@@ -243,6 +251,7 @@ def handle_fill(args):
 
     return 0
 
+
 #обрабатывает команду сортировки массива
 def handle_sort(args):
     #читает исходный массив
@@ -259,11 +268,13 @@ def handle_sort(args):
         (values, descending)
     )
 
-    #выводим результат или записываем его в файл
-    write_array(values, args.output)
+    #записываем результат в файл, если он указан
+    if args.output:
+        write_array(values, args.output)
 
     print("Массив отсортирован.")
     return 0
+
 
 
 def handle_search(args):
